@@ -1,0 +1,35 @@
+
+version: '3'
+
+include:
+  - proxy.yaml
+
+services:
+  db:
+    networks:
+        backend:
+          ipv4_address: 172.20.0.10
+    image: mysql:latest
+    restart: always
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+
+
+  web:
+    networks:
+        backend:
+          ipv4_address: 172.20.0.5     
+    build:
+      dockerfile: Dockerfile.python
+    env_file:
+      - .env_app
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - "5000:5000"
+
+
+  
